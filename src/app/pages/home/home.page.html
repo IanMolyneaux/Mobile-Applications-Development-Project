@@ -1,13 +1,55 @@
+// Home Page Template
+
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>home</ion-title>
+    <ion-title>Home</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/favourites']" aria-label="Favourites">
+        <ion-icon name="heart-outline"></ion-icon>
+      </ion-button>
+      <ion-button [routerLink]="['/settings']" aria-label="Settings">
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Student Number</ion-card-title>
+      <ion-card-subtitle>{{ studentNumber }}</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+  <ion-item>
+    <ion-label position="stacked">Ingredients</ion-label>
+    <ion-input [(ngModel)]="query" placeholder="e.g. chicken, rice, garlic"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="search()" [disabled]="loading || !query.trim()">Search</ion-button>
+
+  @if (loading) {
+  <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  }
+
+  @if (results.length) {
+  <ion-list>
+    @for (r of results; track r.id) {
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <img [src]="r.image" />
+      </ion-thumbnail>
+
+      <ion-label>
+        <h2>{{ r.title }}</h2>
+      </ion-label>
+
+      <ion-button slot="end" (click)="openDetails(r.id)">Details</ion-button>
+    </ion-item>
+  }
+  </ion-list>
+}
+  
 </ion-content>

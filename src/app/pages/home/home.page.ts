@@ -1,20 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import { NavController, ToastController } from '@ionic/angular';
+
+import { SpoonacularService } from 'src/app/services/spoonacular.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonicModule, RouterModule, CommonModule, FormsModule]
 })
-export class HomePage implements OnInit {
+export class HomePage {
+  studentNumber = 'G00472915';
 
-  constructor() { }
+  query = '';
+  loading = false;
 
-  ngOnInit() {
+  results: Array<{ id: number; title: string; image: string }> = [];
+
+  constructor(
+    private api: SpoonacularService,
+    private nav: NavController,
+    private toast: ToastController
+  ) { }
+
+  search() {
+    const q = this.query.trim();
+    if (!q) return;
+
+    this.loading = true;
+
+    this.api.searchRecipes(q).subscribe({
+      next: (res) => {
+        this.results = res?.results || [];
+        this.loading = false;
+      },
+      error: async () => {
+        this.loading = false;
+        const t = await this.toast.create({ message: 'Search failed.', duration: 2000})
+        await t.present();
+      },
+    });
+  }
+
+  openDetails(id: number) {
+    this.nav.navigateForward(`/recipe/${id}`);
   }
 
 }
