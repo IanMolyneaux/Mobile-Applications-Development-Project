@@ -1,13 +1,28 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>settings</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Measurement Unit</ion-label>
+    </ion-list-header>
+
+    <ion-radio-group [(ngModel)]="measurement" (ionChange)="save()">
+      <ion-item>
+        <ion-label>Metric</ion-label>
+        <ion-radio value="metric"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>US</ion-label>
+        <ion-radio value="us"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </ion-list>
 </ion-content>
