@@ -1,13 +1,66 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>recipe-details</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Recipe Details</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">recipe-details</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  @if (loading) {
+  <ion-progress-bar type="indeterminate"></ion-progress-bar>
+  }
+
+  @if (recipe) {
+
+    <ion-card>
+      <img [src]="recipe.image" />
+      <ion-card-header>
+        <ion-card-title>{{ recipe.title }}</ion-card-title>
+        <ion-card-subtitle>
+          Units: {{ measurement.toUpperCase() }}
+        </ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-item-divider>
+      <ion-label>Ingredients</ion-label>
+    </ion-item-divider>
+
+    <ion-list>
+      @for (ing of recipe.extendedIngredients; track ing.id) {
+      <ion-item>
+        <ion-label>
+          <strong>{{ amount(ing) }} {{ unit(ing) }}</strong> - {{ ing.original }}
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+
+    <ion-item-divider>
+      <ion-label>Instructions</ion-label>
+    </ion-item-divider>
+
+    @if (steps.length) {
+    <ion-list>
+      @for (s of steps; track s.number) {
+      <ion-item>
+        <ion-label>
+          <h3>Step {{ s.number }}</h3>
+          <p>{{ s.step }}</p>
+        </ion-label>
+      </ion-item>
+      }
+    </ion-list>
+  } @else {
+    <ion-text class="ion-padding">
+      <p>No instructions available</p>
+    </ion-text>
+  }
+
+  <ion-button expand="block" (click)="toggleFavourite()">
+    {{ isFavourite ? 'Remove from Favourites' : 'Add to Favourites' }}
+  </ion-button>
+  }
 </ion-content>

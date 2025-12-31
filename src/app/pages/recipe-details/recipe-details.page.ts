@@ -1,20 +1,85 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule, ToastController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+
+import { SpoonacularService, RecipeInformationResponse } from 'src/app/services/spoonacular.service';
+import { SettingsService, MeasurementUnit } from 'src/app/services/settings.service';
+import { FavouriteService } from 'src/app/services/favourites.service';
 
 @Component({
   selector: 'app-recipe-details',
   templateUrl: './recipe-details.page.html',
   styleUrls: ['./recipe-details.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule],
 })
-export class RecipeDetailsPage implements OnInit {
+export class RecipeDetailsPage {
+  loading = true;
+  recipe?: RecipeInformationResponse;
 
-  constructor() { }
+  measurement: MeasurementUnit = 'metric';
+  isFavourite = false;
 
-  ngOnInit() {
+  constructor(
+    private route: ActivatedRoute,
+    private api: SpoonacularService,
+    private settings: SettingsService,
+    private favs: FavouriteService,
+    private toast: ToastController
+  ) {}
+
+  get steps() {
+    return this.recipe?.analyzedInstructions?.[0]?.steps || [];
+  }
+
+  async ionViewWillEnter() {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.loading = true;
+
+    this.measurement = await this.settings.getMeasurement();
+    this.isFavourite = await this.favs.isFavourite(id);
+
+    this.api.getRecipeInformation(id).subscribe({
+      next: (info) => {
+        this.recipe = info;
+        this.loading = false;
+      },
+      error: async () => {
+        this.loading = false;
+        const t = await this.toast.create({ message: 'Failed to load recipe details.', duration: 2000})
+        await t.present();
+      }
+    });
+  }
+
+  amount(ing: any): string {
+    const m = this.measurement === 'us' ? ing.measures?.us : ing.measures?.metric;
+    if (!m) return '';
+    return Number(m.amount).toFixed(2).replace(/\.00$/, '');
+  }
+
+  unit(ing: any): string {
+    const m = this.measurement === 'us' ? ing.measures?.us : ing.measures?.metric;
+    return m?.unitLong || '';
+  }
+
+  async toggleFavourite() {
+    if (!this.recipe) return;
+
+    if (this.isFavourite) {
+      await this.favs.remove(this.recipe.id);
+      this.isFavourite = false;
+    } else {
+      await this.favs.add({ id: this.recipe.id, title: this.recipe.title, image: this.recipe.image});
+      this.isFavourite = true;
+    }
+
+    const t = await this.toast.create({
+      message: this.isFavourite ? 'Added to favourites' : 'Removed from favourites',
+      duration: 1500
+    });
+    await t.present();
   }
 
 }
