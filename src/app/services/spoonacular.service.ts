@@ -34,19 +34,20 @@ export class SpoonacularService {
 
     // Home page API: Search Recipies
     searchRecipes(query: string, offset: number = 0, number: number = 20) {
-        const params = new HttpParams()
-            .set('apiKey', this.apiKey)
-            .set('query', query)
-            .set('number', String(number))
-            .set('offset', String(offset));
-
+        const params = new HttpParams({
+            fromObject: {
+                apiKey: this.apiKey,
+                query,
+                number: String(number),
+                offset: String(offset),
+            },
+        });
         return this.http.get<ComplexSearchResponse>(`${this.baseUrl}recipes/complexSearch`, { params });
     }
 
     // Details page API: Get Recipe Information
     getRecipeInformation(id: number): Observable<RecipeInformationResponse> {
-        const params = new HttpParams()
-            .set('apiKey', this.apiKey);
+        const params = new HttpParams().set('apiKey', this.apiKey);
 
         return this.http.get<RecipeInformationResponse>(`${this.baseUrl}recipes/${id}/information`, { params });
     }

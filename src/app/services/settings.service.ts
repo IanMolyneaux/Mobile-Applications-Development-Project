@@ -17,7 +17,13 @@ export class SettingsService {
         }
     }
 
-    async getMeasurement(unit: MeasurementUnit): Promise<void> {
+    async getMeasurement(): Promise<MeasurementUnit> {
+        await this.ready();
+        const value = await this.storage.get(KEY);
+        return (value === 'us' || value === 'metric') ? value : 'metric';
+    }
+
+    async setMeasurement(unit: MeasurementUnit): Promise<void> {
         await this.ready();
         await this.storage.set(KEY, unit);
     }

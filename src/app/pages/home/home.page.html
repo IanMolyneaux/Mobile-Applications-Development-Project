@@ -1,4 +1,4 @@
-// Home Page Template
+<!-- Home Page Template -->
 
 <ion-header [translucent]="true">
   <ion-toolbar>
@@ -34,6 +34,12 @@
   <ion-progress-bar type="indeterminate"></ion-progress-bar>
   }
 
+  @if (!loading && results.length === 0 && query.trim()) {
+    <ion-text>
+      <p>No results found. Try a different ingredient</p>
+    </ion-text>
+  }
+
   @if (results.length) {
   <ion-list>
     @for (r of results; track r.id) {
@@ -50,6 +56,17 @@
     </ion-item>
   }
   </ion-list>
+
+  <ion-item lines="none">
+    <ion-button (click)="prevPage()" [disabled]="!canPrev">Previous</ion-button>
+
+    <ion-label class="ion-text-center">
+      <div>{{ pageLabel }}</div>
+      <small>{{ totalResults }} Results</small>
+    </ion-label>
+
+    <ion-button (click)="nextPage()" [disabled]="!canNext">Next</ion-button>
+  </ion-item>
 }
   
 </ion-content>
