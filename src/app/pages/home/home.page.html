@@ -41,32 +41,40 @@
   }
 
   @if (results.length) {
-  <ion-list>
-    @for (r of results; track r.id) {
-    <ion-item>
-      <ion-thumbnail slot="start">
-        <img [src]="r.image" />
-      </ion-thumbnail>
+    <ion-note>
+      {{ totalResults }} Results Found {{ pageLabel }}
+    </ion-note>
 
-      <ion-label>
-        <h2>{{ r.title }}</h2>
+    <div class="recipe-grid">
+      @for (r of results; track r.id) {
+        <ion-card class="recipe-card">
+          <img [src]="r.image" [alt]="r.title" />
+          <ion-card-header>
+            <ion-card-title class="card-title">{{ r.title }}</ion-card-title>
+            <ion-card-subtitle>
+              @if (favIds.has(r.id)) {
+                <ion-badge>
+                  Saved in Favourites
+                </ion-badge>
+              }
+            </ion-card-subtitle>
+          </ion-card-header>
+
+          <ion-card-content class="card-content">
+            <ion-button expand="block" (click)="openDetails(r.id)">Details</ion-button>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+
+    <ion-item lines="none">
+      <ion-button (click)="prevPage()" [disabled]="!canPrev">Previous</ion-button>
+      <ion-label class="ion-text-center">
+        <div>{{ pageLabel }}</div>
+        <small>{{ totalResults }} Results</small>
       </ion-label>
 
-      <ion-button slot="end" (click)="openDetails(r.id)">Details</ion-button>
+      <ion-button (click)="nextPage()" [disabled]="!canNext">Next</ion-button>
     </ion-item>
   }
-  </ion-list>
-
-  <ion-item lines="none">
-    <ion-button (click)="prevPage()" [disabled]="!canPrev">Previous</ion-button>
-
-    <ion-label class="ion-text-center">
-      <div>{{ pageLabel }}</div>
-      <small>{{ totalResults }} Results</small>
-    </ion-label>
-
-    <ion-button (click)="nextPage()" [disabled]="!canNext">Next</ion-button>
-  </ion-item>
-}
-  
-</ion-content>
+  </ion-content>

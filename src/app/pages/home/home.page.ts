@@ -16,15 +16,17 @@ import {
   IonItem, 
   IonLabel, 
   IonInput, 
-  IonList, 
-  IonThumbnail, 
   IonProgressBar, 
   IonCard, 
   IonCardHeader, 
   IonCardTitle, 
   IonCardSubtitle, 
+  IonCardContent,
+  IonBadge,
+  IonNote,
   IonText, 
 } from '@ionic/angular/standalone';
+import { FavouriteService } from 'src/app/services/favourites.service';
 
 @Component({
   selector: 'app-home',
@@ -44,14 +46,15 @@ import {
     IonIcon, 
     IonItem, 
     IonLabel, 
-    IonInput, 
-    IonList, 
-    IonThumbnail, 
+    IonInput,  
     IonProgressBar, 
     IonCard, 
     IonCardHeader, 
     IonCardTitle, 
-    IonCardSubtitle, 
+    IonCardSubtitle,
+    IonCardContent,
+    IonBadge,
+    IonNote,
     IonText,
   ],
 })
@@ -63,15 +66,24 @@ export class HomePage {
 
   results: Array<{ id: number; title: string; image: string }> = [];
 
+  // Pagination state
   pageSize = 20;
   pageIndex = 0;
   totalResults = 0;
 
+  // Shows favourite badges on recipe cards
+  favIds = new Set<number>();
+
   constructor(
     private api: SpoonacularService,
+    private favs: FavouriteService,
     private nav: NavController,
     private toast: ToastController
   ) { }
+
+  async ionViewWillEnter() {
+    await this.refreshFavIds();
+  }
 
   private get offset(): number {
     return this.pageIndex * this.pageSize;
@@ -90,6 +102,11 @@ export class HomePage {
     return `Page ${this.pageIndex + 1} of ${totalPages}`;
   }
 
+  async refreshFavIds() {
+    const list = await this.favs.list();
+    this.favIds = new Set(list.map(r => r.id));
+  }
+
   search(): void {
     const q = this.query.trim();
     if (!q) return;
@@ -105,9 +122,10 @@ export class HomePage {
     this.loading = true;
 
     this.api.searchRecipes(q, this.offset, this.pageSize).subscribe({
-      next: (res) => {
+      next: async (res) => {
         this.results = res?.results || [];
         this.totalResults = res?.totalResults || 0;
+        await this.refreshFavIds();
         this.loading = false;
       },
       error: async () => {
