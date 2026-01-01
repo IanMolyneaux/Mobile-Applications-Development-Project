@@ -33,11 +33,12 @@ export class SpoonacularService {
     constructor(private http: HttpClient) {}
 
     // Home page API: Search Recipies
-    searchRecipes(query: string): Observable<ComplexSearchResponse> {
+    searchRecipes(query: string, offset: number = 0, number: number = 20) {
         const params = new HttpParams()
             .set('apiKey', this.apiKey)
             .set('query', query)
-            .set('number', '20'); // Limit to 20 results
+            .set('number', String(number))
+            .set('offset', String(offset));
 
         return this.http.get<ComplexSearchResponse>(`${this.baseUrl}recipes/complexSearch`, { params });
     }
