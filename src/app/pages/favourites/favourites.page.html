@@ -1,13 +1,28 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>favourites</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Favourites</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">favourites</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-list *ngIf="favourites.length; else empty">
+    <ion-item *ngFor="let r of favourites">
+      <ion-thumbnail slot="start">
+        <img [src]="r.image" />
+      </ion-thumbnail>
+
+      <ion-label>
+        <h2>{{ r.title }}</h2>
+      </ion-label>
+
+      <ion-button slot="end" (click)="openDetails(r.id)">Details</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #empty>
+    <ion-text><p>No favourites yet.</p></ion-text>
+  </ng-template>
 </ion-content>

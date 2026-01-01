@@ -1,20 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+import { NavController } from '@ionic/angular';
+
+import { FavouriteService, FavouriteRecipe } from 'src/app/services/favourites.service';
 
 @Component({
   selector: 'app-favourites',
   templateUrl: './favourites.page.html',
   styleUrls: ['./favourites.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, RouterModule],
 })
-export class FavouritesPage implements OnInit {
+export class FavouritesPage {
+  favourites: FavouriteRecipe[] = [];
 
-  constructor() { }
+  constructor(private favs: FavouriteService, private nav: NavController) { }
 
-  ngOnInit() {
+  async ionViewWillEnter() {
+    this.favourites = await this.favs.list();
+  }
+
+  openDetails(id: number) {
+    this.nav.navigateForward(`/recipe/${id}`);
   }
 
 }
