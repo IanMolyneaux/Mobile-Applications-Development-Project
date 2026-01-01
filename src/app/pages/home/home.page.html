@@ -25,7 +25,7 @@
 
   <ion-item>
     <ion-label position="stacked">Ingredients</ion-label>
-    <ion-input [(ngModel)]="query" placeholder="e.g. chicken, rice, garlic"></ion-input>
+    <ion-input [(ngModel)]="query" (ionInput)="onQueryChange()" placeholder="e.g. chicken, rice, garlic"></ion-input>
   </ion-item>
 
   <ion-button expand="block" (click)="search()" [disabled]="loading || !query.trim()">Search</ion-button>
@@ -34,7 +34,7 @@
   <ion-progress-bar type="indeterminate"></ion-progress-bar>
   }
 
-  @if (!loading && results.length === 0 && query.trim()) {
+  @if (hasSearched && !loading && results.length === 0) {
     <ion-text>
       <p>No results found. Try a different ingredient</p>
     </ion-text>

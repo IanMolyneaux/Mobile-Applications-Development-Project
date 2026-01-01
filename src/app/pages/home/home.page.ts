@@ -63,6 +63,7 @@ export class HomePage {
 
   query = '';
   loading = false;
+  hasSearched = false;
 
   results: Array<{ id: number; title: string; image: string }> = [];
 
@@ -111,8 +112,17 @@ export class HomePage {
     const q = this.query.trim();
     if (!q) return;
 
+    this.hasSearched = true;
     this.pageIndex = 0;
     this.loadPage();
+  }
+
+  onQueryChange() {
+    if (!this.query.trim()) {
+      this.hasSearched = false;
+      this.results = [];
+      this.totalResults = 0;
+    }
   }
 
   loadPage(): void {
