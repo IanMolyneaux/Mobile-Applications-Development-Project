@@ -25,7 +25,7 @@
 
   <ion-item>
     <ion-label position="stacked">Ingredients</ion-label>
-    <ion-input [(ngModel)]="query" (ionInput)="onQueryChange()" placeholder="e.g. chicken, rice, garlic"></ion-input>
+    <ion-input [(ngModel)]="query" (keyup.enter)="search()" placeholder="e.g. chicken, rice, garlic"></ion-input>
   </ion-item>
 
   <ion-button expand="block" (click)="search()" [disabled]="loading || !query.trim()">Search</ion-button>
