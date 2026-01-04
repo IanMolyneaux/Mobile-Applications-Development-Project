@@ -1,52 +1,71 @@
-<!-- Recipe Details Page Template -->
+<!-- 
+  Recipe Details Page Template
+  Displays full information for a selected recipe including recipe image and title, ingredients with quantities and units,
+  cooking instructions and an option to add or remove the recipe from favourites
+-->
 
 <ion-header>
   <ion-toolbar>
+    <!-- Back button to return to the home page -->
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+    <!-- Page title -->
     <ion-title>Recipe Details</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
  
+  <!-- Loading indicator shown while recipe data is being fetched -->
   <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
   
 
+  <!-- Render recipe content only once data has been loaded -->
   <ng-container *ngIf="recipe">
 
+    <!-- Recipe summary card -->
     <ion-card>
+      <!-- Main image of recipe -->
       <img [src]="recipe.image" />
       <ion-card-header>
         <ion-card-title>{{ recipe.title }}</ion-card-title>
+        <!-- Displays the current measurment system selected in settings-->
         <ion-card-subtitle>
           Units: {{ measurement.toUpperCase() }}
         </ion-card-subtitle>
       </ion-card-header>
     </ion-card>
 
+    <!-- Ingredients section header -->
     <ion-item-divider>
       <ion-label>Ingredients</ion-label>
     </ion-item-divider>
 
+    <!-- List of ingredients with quantities and optional images -->
     <ion-list>
+      <!-- Loops through each ingredient returned by the API -->
       <ion-item *ngFor="let ing of recipe.extendedIngredients">
+        <!-- Ingredient image (shown if available) -->
         <ion-thumbnail slot="start" *ngIf="ingredientImageURL(ing.image) as imgUrl">
           <img [src]="imgUrl" [alt]="ing.original" />
         </ion-thumbnail>
 
+        <!-- Ingredient description with wrapped text -->
         <ion-label class="ion-text-wrap">
           <strong>{{ amount(ing) }} {{ unit(ing) }}</strong> - {{ ing.original }}
         </ion-label>
       </ion-item>
     </ion-list>
 
+    <!-- Instructions section header -->
     <ion-item-divider>
       <ion-label>Instructions</ion-label>
     </ion-item-divider>
 
+    <!-- Step by step instructions if available -->
     <ion-list *ngIf="steps.length; else noSteps">
+      <!-- Loops through each instruction step -->
       <ion-item *ngFor="let s of steps">
         <ion-label class="ion-text-wrap">
           <h3>Step {{ s.number }}</h3>
@@ -55,16 +74,17 @@
       </ion-item>
     </ion-list>
   
-  <ng-template #noSteps>
-    <ion-text class="ion-padding">
-      <p>No instructions available</p>
-    </ion-text>
-  </ng-template>
+    <!-- Fallback message if no instructions are provided by the API -->
+    <ng-template #noSteps>
+      <ion-text class="ion-padding">
+        <p>No instructions available</p>
+      </ion-text>
+    </ng-template>
   
-
-  <ion-button expand="block" (click)="toggleFavourite()">
-    {{ isFavourite ? 'Remove from Favourites' : 'Add to Favourites' }}
-  </ion-button>
+    <!-- Button to add or remove recipe from favourites -->
+    <ion-button expand="block" (click)="toggleFavourite()">
+      {{ isFavourite ? 'Remove from Favourites' : 'Add to Favourites' }}
+    </ion-button>
 
   </ng-container>
 

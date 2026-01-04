@@ -1,9 +1,18 @@
+/*
+    Recipe Grid Layout
+    Uses CSS Grid to display recipe cards in a responsive grid layout
+    The number of columns adjusts based on screen width, ensuring good usability on mobile, tablet, and desktop devices.
+*/
 .recipe-grid {
     display: grid;
     gap: 12px;
     grid-template-columns: 1fr;
 }
 
+/*
+    Recipe Card Container
+    Uses flexbox to ensure consistent card height and to keep the action button aligned at the bottom of the card
+*/
 .recipe-card {
     display: flex;
     flex-direction: column;
@@ -39,6 +48,10 @@
     }
 }
 
+/* 
+    Recipe Image Styling
+    Ensures images fill the card width and maintain a consistent height and crop excess content cleanly
+*/
 .recipe-card img {
     width: 100%;
     height: 160px;
@@ -46,6 +59,11 @@
     display: block;
 }
 
+/* 
+    Recipe Title Styling
+    Limits the title to two lines to keep card height consistent. 
+    Uses line clamping to prevent overly long title from expanding cards.
+*/
 .card-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -54,6 +72,10 @@
     overflow: hidden;
 }
 
+/*
+    Card Content 
+    Pushes the Details button to the bottom of the card to ensure consistent alignmnet across all cards.
+*/
 .card-content {
     margin-top: auto;
 }

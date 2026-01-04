@@ -1,9 +1,14 @@
-<!-- Home Page Template -->
+<!-- 
+  Home Page Template
+  Allows the user to search for recipes by ingredients, view paginated results, and navigate to Favourites and settings
+-->
 
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <!-- Page title -->
     <ion-title>Home</ion-title>
 
+    <!-- Action buttons for navigating to Favourites and Settings pages -->
     <ion-buttons slot="end">
       <ion-button [routerLink]="['/favourites']" aria-label="Favourites">
         <ion-icon name="heart-outline"></ion-icon>
@@ -16,6 +21,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Displays my student number as required -->
   <ion-card>
     <ion-card-header>
       <ion-card-title>Student Number</ion-card-title>
@@ -23,8 +29,10 @@
     </ion-card-header>
   </ion-card>
 
+  <!-- Ingredient search input-->
   <ion-item>
     <ion-label position="stacked">Ingredients</ion-label>
+    <!-- ngModel binds the input value to the query variable. onQueryChange() resets state when input is cleared and keyup.enter allows pressing enter to trigger a search -->
     <ion-input 
       [(ngModel)]="query" 
       (ngModelChange)="onQueryChange()" 
@@ -33,45 +41,57 @@
     </ion-input>
   </ion-item>
 
+  <!-- Button to trigger recipe search -->
   <ion-button expand="block" (click)="search()" [disabled]="loading || !query.trim()">Search</ion-button>
 
+  <!-- Loading indicator show while API request is in progress -->
   <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
 
-    <ion-text *ngIf="hasSearched && !loading && results.length === 0">
-      <p>No results found. Try a different ingredient</p>
-    </ion-text>
+  <!-- Message show when a search returns no results -->
+  <ion-text *ngIf="hasSearched && !loading && results.length === 0">
+    <p>No results found. Try a different ingredient</p>
+  </ion-text>
 
-    <ng-container *ngIf="results.length">
+  <!-- Container for search results -->
+  <ng-container *ngIf="results.length">
 
-      <ion-note>
-        {{ totalResults }} Results Found {{ pageLabel }}
-      </ion-note>
+    <!-- Displays total number of results and current page -->
+    <ion-note>
+      {{ totalResults }} Results Found {{ pageLabel }}
+    </ion-note>
 
-      <div class="recipe-grid">
-        <ion-card class="recipe-card" *ngFor="let r of results">
-          <img [src]="r.image" [alt]="r.title" />
-          <ion-card-header>
-            <ion-card-title class="card-title">{{ r.title }}</ion-card-title>
-            <ion-card-subtitle>
-                <ion-badge *ngIf="favIds.has(r.id)">
-                  Saved in Favourites
-                </ion-badge>
-            </ion-card-subtitle>
-          </ion-card-header>
+    <!-- Responsive grid of recipe cards. Each card displays recipe image, title, favourite indicate (if saved) and a button to view recipe details -->
+    <div class="recipe-grid">
+      <ion-card class="recipe-card" *ngFor="let r of results">
+        <!-- Recipe image -->
+        <img [src]="r.image" [alt]="r.title" />
+        <ion-card-header>
+          <ion-card-title class="card-title">{{ r.title }}</ion-card-title>
+          <!-- Favourite badge shown if recipe is saved -->
+          <ion-card-subtitle>
+              <ion-badge *ngIf="favIds.has(r.id)">
+                Saved in Favourites
+              </ion-badge>
+          </ion-card-subtitle>
+        </ion-card-header>
 
-          <ion-card-content class="card-content">
-            <ion-button expand="block" (click)="openDetails(r.id)">Details</ion-button>
-          </ion-card-content>
-        </ion-card>
-      </div>
+        <!-- Button to navigate to the Recipe Details page -->
+        <ion-card-content class="card-content">
+          <ion-button expand="block" (click)="openDetails(r.id)">Details</ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
+    <!-- Pagination controls -->
     <ion-item lines="none">
+      <!-- Navigate to previous page -->
       <ion-button (click)="prevPage()" [disabled]="!canPrev">Previous</ion-button>
+      <!-- Current page indicator -->
       <ion-label class="ion-text-center">
         <div>{{ pageLabel }}</div>
         <small>{{ totalResults }} Results</small>
       </ion-label>
-
+      <!-- Navigate to next page -->
       <ion-button (click)="nextPage()" [disabled]="!canNext">Next</ion-button>
     </ion-item>
   </ng-container>

@@ -1,26 +1,36 @@
-<!-- Settings Page Template -->
+<!-- 
+  Settings Page Template
+  Allows the user to select their preferred measurement system.
+  The selected value is persisted and used when displaying recipe information
+-->
 
 <ion-header>
   <ion-toolbar>
+    <!-- Back button to return to the home page -->
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+    <!-- Page title -->
     <ion-title>Settings</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- List container for settings options -->
   <ion-list>
+    <!-- Section Header -->
     <ion-list-header>
       <ion-label>Measurement Unit</ion-label>
     </ion-list-header>
 
+    <!-- Radio group bound to the measurement property.  Triggering the selection triggers save(), which persists the settings -->
     <ion-radio-group [(ngModel)]="measurement" (ionChange)="save()">
+      <!-- Metric measurement option -->
       <ion-item>
         <ion-label>Metric</ion-label>
         <ion-radio value="metric"></ion-radio>
       </ion-item>
-
+      <!-- US/Imperial measurement option -->
       <ion-item>
         <ion-label>US</ion-label>
         <ion-radio value="us"></ion-radio>

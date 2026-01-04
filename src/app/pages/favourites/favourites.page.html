@@ -1,28 +1,42 @@
+<!-- 
+  Favourites Page Template
+  This page displays a list of recipes the user has saved as favourites.
+  If no favourites exist, a message is shown
+ -->
+
 <ion-header>
   <ion-toolbar>
+    <!-- Back button to return the user to the Home page -->
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
+    <!-- Page title -->
     <ion-title>Favourites</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <!-- Show the favourites list only if at least one favourite exits. If empty, show a message -->
   <ion-list *ngIf="favourites.length; else empty">
+    <!-- Loops through each favourite recipe and displays a thumbnail image, recipe title and Details button -->
     <ion-item *ngFor="let r of favourites">
+      <!-- Recipe thumbnail image -->
       <ion-thumbnail slot="start">
         <img [src]="r.image" />
       </ion-thumbnail>
 
+      <!-- Recipe title (wrapped so it never gets cut off on smaller screens) -->
       <ion-label class="ion-text-wrap">
         <h2>{{ r.title }}</h2>
       </ion-label>
 
+      <!-- Button to navigate to the Recipe Details page -->
       <ion-button slot="end" (click)="openDetails(r.id)">Details</ion-button>
     </ion-item>
   
   </ion-list>
 
+  <!-- Template shown when there are no favourites saved -->
   <ng-template #empty>
     <ion-text>
       <p>No favourites yet.</p>
