@@ -36,7 +36,7 @@
           <img [src]="imgUrl" [alt]="ing.original" />
         </ion-thumbnail>
 
-        <ion-label>
+        <ion-label class="ion-text-wrap">
           <strong>{{ amount(ing) }} {{ unit(ing) }}</strong> - {{ ing.original }}
         </ion-label>
       </ion-item>
@@ -48,7 +48,7 @@
 
     <ion-list *ngIf="steps.length; else noSteps">
       <ion-item *ngFor="let s of steps">
-        <ion-label>
+        <ion-label class="ion-text-wrap">
           <h3>Step {{ s.number }}</h3>
           <p>{{ s.step }}</p>
         </ion-label>
@@ -65,7 +65,7 @@
   <ion-button expand="block" (click)="toggleFavourite()">
     {{ isFavourite ? 'Remove from Favourites' : 'Add to Favourites' }}
   </ion-button>
-  
+
   </ng-container>
 
 </ion-content>
