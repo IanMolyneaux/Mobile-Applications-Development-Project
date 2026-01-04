@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
 export type MeasurementUnit = 'metric' | 'us';
@@ -6,9 +6,8 @@ const KEY = 'measurement_unit';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
+    private storage = inject(Storage);
     private readyDone = false;
-
-    constructor (private storage: Storage) {}
 
     private async ready() {
         if (!this.readyDone) {
