@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -27,13 +27,17 @@ export interface RecipeInformationResponse {
     
 @Injectable({ providedIn: 'root' })
 export class SpoonacularService {
+    private http = inject(HttpClient);
     private baseUrl = environment.spoonacularBaseUrl;
     private apiKey = environment.spoonacularApiKey;
 
-    constructor(private http: HttpClient) {}
+    private url(path: string) {
+        const base = this.baseUrl.endsWith('/') ? this.baseUrl : this.baseUrl + '/';
+        return base + path.replace(/^\//, '');
+    }
 
     // Home page API: Search Recipies
-    searchRecipes(query: string, offset: number = 0, number: number = 20) {
+    searchRecipes(query: string, offset: number = 0, number: number = 20): Observable<ComplexSearchResponse> {
         const params = new HttpParams({
             fromObject: {
                 apiKey: this.apiKey,
@@ -42,14 +46,14 @@ export class SpoonacularService {
                 offset: String(offset),
             },
         });
-        return this.http.get<ComplexSearchResponse>(`${this.baseUrl}recipes/complexSearch`, { params });
+        return this.http.get<ComplexSearchResponse>(this.url('recipes/complexSearch'), { params });
     }
 
     // Details page API: Get Recipe Information
     getRecipeInformation(id: number): Observable<RecipeInformationResponse> {
         const params = new HttpParams().set('apiKey', this.apiKey);
 
-        return this.http.get<RecipeInformationResponse>(`${this.baseUrl}recipes/${id}/information`, { params });
+        return this.http.get<RecipeInformationResponse>(this.url(`recipes/${id}/information`), { params });
     }
 
 }
