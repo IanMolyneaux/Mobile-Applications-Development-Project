@@ -10,7 +10,7 @@ export interface FavouriteRecipe {
 const KEY = 'favourite_recipes';
 
 @Injectable({ providedIn: 'root' })
-export class FavouriteService {
+export class FavouritesService {
     private readyDone = false;
 
     constructor (private storage: Storage) {}

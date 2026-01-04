@@ -1,65 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { NavController, ToastController } from '@ionic/angular';
+import { Router, RouterModule } from '@angular/router';
+import { IonicModule, ToastController } from '@ionic/angular';
+import { inject } from '@angular/core';
 
 import { SpoonacularService } from 'src/app/services/spoonacular.service';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonTitle, 
-  IonToolbar, 
-  IonButtons, 
-  IonButton, 
-  IonIcon, 
-  IonItem, 
-  IonLabel, 
-  IonInput, 
-  IonProgressBar, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardSubtitle, 
-  IonCardContent,
-  IonBadge,
-  IonNote,
-  IonText, 
-} from '@ionic/angular/standalone';
-import { FavouriteService } from 'src/app/services/favourites.service';
+import { FavouritesService } from 'src/app/services/favourites.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [
-    RouterModule, 
-    CommonModule, 
-    FormsModule, 
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    IonButtons, 
-    IonButton, 
-    IonIcon, 
-    IonItem, 
-    IonLabel, 
-    IonInput,  
-    IonProgressBar, 
-    IonCard, 
-    IonCardHeader, 
-    IonCardTitle, 
-    IonCardSubtitle,
-    IonCardContent,
-    IonBadge,
-    IonNote,
-    IonText,
-  ],
+  imports: [RouterModule, CommonModule, FormsModule, IonicModule],
 })
 export class HomePage {
   studentNumber = 'G00472915';
+
+  private toast = inject(ToastController);
 
   query = '';
   loading = false;
@@ -77,9 +36,8 @@ export class HomePage {
 
   constructor(
     private api: SpoonacularService,
-    private favs: FavouriteService,
-    private nav: NavController,
-    private toast: ToastController
+    private favs: FavouritesService,
+    private router: Router
   ) { }
 
   async ionViewWillEnter() {
@@ -122,6 +80,7 @@ export class HomePage {
       this.hasSearched = false;
       this.results = [];
       this.totalResults = 0;
+      this.pageIndex = 0;
     }
   }
 
@@ -159,7 +118,7 @@ export class HomePage {
   }
 
   openDetails(id: number) {
-    this.nav.navigateForward(`/recipe/${id}`);
+    this.router.navigate(['/recipe', id]);
   }
 
 }

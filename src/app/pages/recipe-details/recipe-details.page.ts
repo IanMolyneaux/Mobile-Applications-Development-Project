@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
+import { inject } from '@angular/core';
 
 import { SpoonacularService, RecipeInformationResponse } from 'src/app/services/spoonacular.service';
 import { SettingsService, MeasurementUnit } from 'src/app/services/settings.service';
-import { FavouriteService } from 'src/app/services/favourites.service';
+import { FavouritesService } from 'src/app/services/favourites.service';
 
 @Component({
   selector: 'app-recipe-details',
@@ -15,6 +16,7 @@ import { FavouriteService } from 'src/app/services/favourites.service';
   imports: [IonicModule, CommonModule],
 })
 export class RecipeDetailsPage {
+  private toast = inject(ToastController);
   loading = true;
   recipe?: RecipeInformationResponse;
 
@@ -25,8 +27,7 @@ export class RecipeDetailsPage {
     private route: ActivatedRoute,
     private api: SpoonacularService,
     private settings: SettingsService,
-    private favs: FavouriteService,
-    private toast: ToastController
+    private favs: FavouritesService
   ) {}
 
   get steps() {

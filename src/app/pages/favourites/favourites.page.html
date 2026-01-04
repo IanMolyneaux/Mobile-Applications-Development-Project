@@ -8,10 +8,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  @if (favourites.length) {
-  <ion-list>
-    @for (r of favourites; track r.id) {
-    <ion-item>
+  <ion-list *ngIf="favourites.length; else empty">
+    <ion-item *ngFor="let r of favourites">
       <ion-thumbnail slot="start">
         <img [src]="r.image" />
       </ion-thumbnail>
@@ -22,10 +20,13 @@
 
       <ion-button slot="end" (click)="openDetails(r.id)">Details</ion-button>
     </ion-item>
-  }
+  
   </ion-list>
-} @else {
-  <ion-text>
-    <p>No favourites yet.</p>
-  </ion-text>
-}
+
+  <ng-template #empty>
+    <ion-text>
+      <p>No favourites yet.</p>
+    </ion-text>
+  </ng-template>
+
+</ion-content>
