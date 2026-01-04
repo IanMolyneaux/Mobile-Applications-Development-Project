@@ -54,6 +54,11 @@ export class RecipeDetailsPage {
     });
   }
 
+  ingredientImageURL(image?: string): string | null {
+    if (!image) return null;
+    return `https://spoonacular.com/cdn/ingredients_100x100/${image}`;
+  }
+
   amount(ing: any): string {
     const m = this.measurement === 'us' ? ing.measures?.us : ing.measures?.metric;
     if (!m) return '';

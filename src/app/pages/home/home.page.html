@@ -25,38 +25,37 @@
 
   <ion-item>
     <ion-label position="stacked">Ingredients</ion-label>
-    <ion-input [(ngModel)]="query" (keyup.enter)="search()" placeholder="e.g. chicken, rice, garlic"></ion-input>
+    <ion-input 
+      [(ngModel)]="query" 
+      (ngModelChange)="onQueryChange()" 
+      (keyup.enter)="search()" 
+      placeholder="e.g. chicken, rice, garlic">
+    </ion-input>
   </ion-item>
 
   <ion-button expand="block" (click)="search()" [disabled]="loading || !query.trim()">Search</ion-button>
 
-  @if (loading) {
-  <ion-progress-bar type="indeterminate"></ion-progress-bar>
-  }
+  <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
 
-  @if (hasSearched && !loading && results.length === 0) {
-    <ion-text>
+    <ion-text *ngIf="hasSearched && !loading && results.length === 0">
       <p>No results found. Try a different ingredient</p>
     </ion-text>
-  }
 
-  @if (results.length) {
-    <ion-note>
-      {{ totalResults }} Results Found {{ pageLabel }}
-    </ion-note>
+    <ng-container *ngIf="results.length">
 
-    <div class="recipe-grid">
-      @for (r of results; track r.id) {
-        <ion-card class="recipe-card">
+      <ion-note>
+        {{ totalResults }} Results Found {{ pageLabel }}
+      </ion-note>
+
+      <div class="recipe-grid">
+        <ion-card class="recipe-card" *ngFor="let r of results">
           <img [src]="r.image" [alt]="r.title" />
           <ion-card-header>
             <ion-card-title class="card-title">{{ r.title }}</ion-card-title>
             <ion-card-subtitle>
-              @if (favIds.has(r.id)) {
-                <ion-badge>
+                <ion-badge *ngIf="favIds.has(r.id)">
                   Saved in Favourites
                 </ion-badge>
-              }
             </ion-card-subtitle>
           </ion-card-header>
 
@@ -64,8 +63,7 @@
             <ion-button expand="block" (click)="openDetails(r.id)">Details</ion-button>
           </ion-card-content>
         </ion-card>
-      }
-    </div>
+      </div>
 
     <ion-item lines="none">
       <ion-button (click)="prevPage()" [disabled]="!canPrev">Previous</ion-button>
@@ -76,5 +74,5 @@
 
       <ion-button (click)="nextPage()" [disabled]="!canNext">Next</ion-button>
     </ion-item>
-  }
-  </ion-content>
+  </ng-container>
+</ion-content>

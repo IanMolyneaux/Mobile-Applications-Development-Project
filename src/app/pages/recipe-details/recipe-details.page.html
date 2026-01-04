@@ -10,11 +10,11 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  @if (loading) {
-  <ion-progress-bar type="indeterminate"></ion-progress-bar>
-  }
+ 
+  <ion-progress-bar *ngIf="loading" type="indeterminate"></ion-progress-bar>
+  
 
-  @if (recipe) {
+  <ng-container *ngIf="recipe">
 
     <ion-card>
       <img [src]="recipe.image" />
@@ -31,38 +31,41 @@
     </ion-item-divider>
 
     <ion-list>
-      @for (ing of recipe.extendedIngredients; track ing.id) {
-      <ion-item>
+      <ion-item *ngFor="let ing of recipe.extendedIngredients">
+        <ion-thumbnail slot="start" *ngIf="ingredientImageURL(ing.image) as imgUrl">
+          <img [src]="imgUrl" [alt]="ing.original" />
+        </ion-thumbnail>
+
         <ion-label>
           <strong>{{ amount(ing) }} {{ unit(ing) }}</strong> - {{ ing.original }}
         </ion-label>
       </ion-item>
-      }
     </ion-list>
 
     <ion-item-divider>
       <ion-label>Instructions</ion-label>
     </ion-item-divider>
 
-    @if (steps.length) {
-    <ion-list>
-      @for (s of steps; track s.number) {
-      <ion-item>
+    <ion-list *ngIf="steps.length; else noSteps">
+      <ion-item *ngFor="let s of steps">
         <ion-label>
           <h3>Step {{ s.number }}</h3>
           <p>{{ s.step }}</p>
         </ion-label>
       </ion-item>
-      }
     </ion-list>
-  } @else {
+  
+  <ng-template #noSteps>
     <ion-text class="ion-padding">
       <p>No instructions available</p>
     </ion-text>
-  }
+  </ng-template>
+  
 
   <ion-button expand="block" (click)="toggleFavourite()">
     {{ isFavourite ? 'Remove from Favourites' : 'Add to Favourites' }}
   </ion-button>
-  }
+  
+  </ng-container>
+
 </ion-content>

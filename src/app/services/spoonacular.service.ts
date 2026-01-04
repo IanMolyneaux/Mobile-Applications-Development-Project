@@ -15,6 +15,7 @@ export interface RecipeInformationResponse {
     extendedIngredients: Array<{ 
         id: number; 
         original: string; 
+        image?: string;
         measures: {
             us: { amount: number; unitLong: string };
             metric: { amount: number; unitLong: string };
